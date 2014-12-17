@@ -26,16 +26,18 @@ def main():
     results = [] # Contains tuples of each mutation along with how long mutation survived
     #Run each mutation with ten random food maps and then take it's average survival time.
     for code_mutation in code_mutations:
+        print "Testing a new code mutation across 10 food maps:"
         current_mutation = convert_code_from_list_to_string(code_mutation)
         total_moves = 0 
         for _ in range(10):
+        print "Testing code mutation against a new food map:"
             x = 50
             y = 50
             health = 100
             food_map = random.choice(food_maps)
-            exec current_mutation
+            while health > 0:
+                exec current_mutation
         results.append((current_mutation, (total_moves / 10)) ) # Take the average 
-        total_moves = 0
     sorted(results, key=lambda result: result[1], reverse=True) #sort by length of health
     print "The top mutation was as follows: \n" + results[0][0] + "\n\n Which on average survived for " + str(results[0][1]) + " units of time."
 
