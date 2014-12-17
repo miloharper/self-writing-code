@@ -1,6 +1,5 @@
 import os
 import random
-import sys
 FoodMap = [[0 for x in xrange(100)] for x in xrange(100)]
 x = 50
 y = 50
