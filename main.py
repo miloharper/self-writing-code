@@ -1,64 +1,45 @@
 import os
+import random 
 from food_map import create_random_food_map
 from code_generation import create_code
-x = 50
-y = 50
-life = 100
+from probability import with_probability
+x = None
+y = None
+food_map = None
+health = None
+total_moves = None
+
 
 def main():
-    #Create a thousand genetic code mutations and fifty foodmaps
-    codeMutations = []
-    foodMaps = []
-    for _ in range(1000):
-        codeMutations.push(getCodeMutation);
+    global x
+    global y
+    global health
+    global total_moves
+    global food_map
+    #Create a thousand genetic code mutations and fifty food_maps
+    code_mutations = []
+    food_maps = []
     for _ in range(50):
-        foodMaps.push(create_random_food_map);
-    results = [] # contains tuples of each mutation along with how long mutation survived
-
-    #Run each mutation with ten random food maps.
-    for codeMutation in codeMutations:
-        currentMutation = convert_code_from_list_to_string(codeMutation)
+        code_mutations.append(create_code());
+    for _ in range(50):
+        food_maps.append(create_random_food_map());
+    results = [] # Contains tuples of each mutation along with how long mutation survived
+    #Run each mutation with ten random food maps and then take it's average healthtime.
+    for code_mutation in code_mutations:
+        current_mutation = convert_code_from_list_to_string(code_mutation)
+        total_moves = 0 
         for _ in range(10):
-            randomFoodMap = random.choice(foodMap)
-            results.push(currentMutation, numIterations)
-            resetGlobals()
-    sorted(results, key=lambda result: result[1]) #sort by length of life
-    print "The top mutation was as follows: \n" + results[0]
-
-
-
+            x = 50
+            y = 50
+            health = 100
+            food_map = random.choice(food_maps)
+            exec current_mutation
     
-def resetGlobals():
-    x = 50
-    y = 50
-    life = 100
-    numIterations = 0
+        results.append((current_mutation, (total_moves / 10)) ) # Take the average 
+        total_moves = 0
+    sorted(results, key=lambda result: result[1], reverse=True) #sort by length of health
+    print "The top mutation was as follows: \n" + results[0][0] + " which lasted for " + str(results[0][1])
 
-
-def modify_code(code):
-    available_commands = ["if on_food_square():", "if not on_food_square():", "up()", "down()", "left()", "right()"]
-    random_number = random.randrange(0, len(available_commands))
-    indents = get_current_number_of_indents(code)
-    if last_command_is_pass(code):
-        # Replace pass with new command
-        code[-1] = whitespace(indents) + available_commands[random_number]
-    else:
-        # Either add the command within the current block, or outside it by using one less indent
-        if with_probability(50):
-            indents = max(0, indents - 1)
-        code.append(whitespace(indents) + available_commands[random_number])
-
-    # If an 'if' command was added, also add a 'pass' to make it valid Python
-    if random_number == 0 or random_number == 1:
-        code.append(whitespace(indents + 1) + "pass")
-    return code
-
-
-def with_probability(probability):
-    if random.randrange(0, 100) < probability:
-        return True
-    else:
-        return False
 
 
 def convert_code_from_list_to_string(input_code):
@@ -69,18 +50,15 @@ def convert_code_from_list_to_string(input_code):
 
 
 def update_everything():
-    global x
-    global y
-    global FoodMap
-    global life
-    global numIterations
-    numIterations += 1
-    life -= 1
-    if FoodMap[x][y] > 0:
-        eat = min(FoodMap[x][y], 10)
-        life += eat
-        FoodMap[x][y] -= eat
-    print "Position = [" + str(x) + "," + str(y) + "], Life = " + str(life) + ", length of life = " + numIterations
+    global total_moves
+    global health
+    total_moves += 1
+    health -= 1
+    if food_map[x][y] > 0:
+        eat = min(food_map[x][y], 10)
+        health += eat
+        food_map[x][y] -= eat
+    print "Position = [" + str(x) + "," + str(y) + "], health = " + str(health) 
 
 
 def up():
@@ -112,9 +90,8 @@ def left():
 
 
 def on_food_square():
-    return FoodMap[x][y] > 0
+    return food_map[x][y] > 0
 
 
 if __name__ == '__main__':
     main()
-
