@@ -5,21 +5,26 @@ def create_code():
     code = []
     available_commands = ["if on_food_square():", "if not on_food_square():", "up()", "down()", "left()", "right()"]
     for _ in range(20):
-        random_number = random.randrange(0, len(available_commands))
+        command = random.choice(available_commands)
         indents = get_current_number_of_indents(code)
+        # If the last command was a 'pass' replace it with a new command
         if last_command_is_pass(code):
-            # Replace pass with new command
-            code[-1] = whitespace(indents) + available_commands[random_number]
-        else:
-            # Either add the command within the current block, or outside it by using one less indent
-            if with_probability(50):
-                indents = max(0, indents - 1)
-            code.append(whitespace(indents) + available_commands[random_number])
-
-        # If an 'if' command was added, also add a 'pass' to make it valid Python
-        if random_number == 0 or random_number == 1:
+            code[-1] = whitespace(indents) + command
+        # Otherwise either add the command within the current block, or outside it by using one less indent
+        else:        
+            indents = randomly_reduce_indentation_level(indents)
+            code.append(whitespace(indents) + command)
+        # If an 'if' command was just added, also add a 'pass' to make it valid Python code
+        if command[:2] == "if":
             code.append(whitespace(indents + 1) + "pass")
     return code
+
+
+def randomly_reduce_indentation_level(indents):
+    if with_probability(50):
+        return max(0, indents - 1)
+    else:
+        return indents
 
 
 def whitespace(indents):
