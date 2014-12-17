@@ -1,18 +1,39 @@
 import os
 import random
+import foodMap
 FoodMap = [[0 for x in xrange(100)] for x in xrange(100)]
 x = 50
 y = 50
 life = 100
 
 def main():
-    code = []
-    seed_environment_with_food()
-    while life > 0:
-        code_as_string = convert_code_from_list_to_string(code)
-        exec code_as_string
-        code = modify_code(code)
-    print code_as_string
+    #Create a thousand genetic code mutations and fifty foodmaps
+    codeMutations = []
+    foodMaps = []
+    for _ in range(1000):
+        codeMutations.push(getCodeMutation);
+    for _ in range(50):
+        foodMaps.push(create_random_food_map);
+    results = [] # contains tuples of each mutation along with how long mutation survived
+
+    #Run each mutation with ten random food maps.
+    for codeMutation in codeMutations:
+        currentMutation = convert_code_from_list_to_string(codeMutation)
+        for _ in range(10):
+            randomFoodMap = random.choice(foodMap)
+            results.push(currentMutation, numIterations)
+            resetGlobals()
+    sorted(results, key=lambda result: result[1]) #sort by length of life
+    print "The top mutation was as follows: \n" + results[0]
+
+
+
+    
+def resetGlobals():
+    x = 50
+    y = 50
+    life = 100
+    numIterations = 0
 
 
 def modify_code(code):
@@ -82,12 +103,14 @@ def update_everything():
     global y
     global FoodMap
     global life
+    global numIterations
+    numIterations += 1
     life -= 1
     if FoodMap[x][y] > 0:
         eat = min(FoodMap[x][y], 10)
         life += eat
         FoodMap[x][y] -= eat
-    print "Position = [" + str(x) + "," + str(y) + "], Life = " + str(life)
+    print "Position = [" + str(x) + "," + str(y) + "], Life = " + str(life) + ", length of life = " + numIterations
 
 
 def up():
