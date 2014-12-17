@@ -4,7 +4,7 @@ import random
 def create_code():
     code = []
     available_commands = ["if on_food_square():", "if not on_food_square():", "up()", "down()", "left()", "right()", "stay()"]
-    for _ in range(20):
+    for _ in range(random.randrange(0, 100)):
         command = random.choice(available_commands)
         indents = get_current_number_of_indents(code)
         # If the last command was a 'pass' replace it with a new command
