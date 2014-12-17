@@ -8,6 +8,7 @@ y = None
 food_map = None
 health = None
 total_moves = None
+brain_size = None # A mutation uses more energy per move if it has a large brain size (which is the number of lines of code it has)
 verbose = False
 
 def main():
@@ -16,6 +17,8 @@ def main():
     global health
     global total_moves
     global food_map
+    global brain_size
+    numTests = 50
     #Create a thousand genetic code mutations and fifty food_maps
     code_mutations = []
     food_maps = []
@@ -23,16 +26,19 @@ def main():
         code_mutations.append(create_code());
     for _ in range(50):
         food_maps.append(create_random_food_map());
+
+
     results = [] # Contains tuples of each mutation along with how long mutation survived
     #Run each mutation with ten random food maps and then take it's average survival time.
     for code_mutation in code_mutations:
+        total_moves = 0
         if verbose:
             print "Testing a new code mutation across 10 food maps:"
         current_mutation = convert_code_from_list_to_string(code_mutation)
-        total_moves = 0 
+        brain_size = len(code_mutation)
         if verbose:
             print "Testing code mutation against a new food map:"
-        for _ in range(50):
+        for _ in range(numTests):
             x = 50
             y = 50
             health = 100
@@ -42,9 +48,9 @@ def main():
                 update_everything()
                 if verbose:
                     print "Health: " + str(health)
-        results.append((current_mutation, (total_moves / 10)) ) # Take the average 
+        results.append((current_mutation, (total_moves / numTests),len(code_mutation)) ) # Take the average 
     sorted(results, key=lambda result: result[1], reverse=True) #sort by length of health
-    print "The top mutation was as follows: \n" + results[0][0] + "\n\n Which on average survived for " + str(results[0][1]) + " units of time."
+    print "The top mutation was as follows: \n" + results[0][0] + "\n\n Which on average survived for " + str(results[0][1]) + " units of time." + "which had a brain size (number of lines) of " + str(results[0][2])
 
 
 def convert_code_from_list_to_string(input_code):
@@ -58,13 +64,18 @@ def update_everything():
     global total_moves
     global health
     total_moves += 1
-    health -= 1
+    health -= calculate_energy_required_to_maintain_brain() # loses 0.1 to 2.1 health per move
     if food_map[x][y] > 0:
         eat = min(food_map[x][y], 10)
         health += eat
         food_map[x][y] -= eat
     if verbose:
         print "Position = [" + str(x) + "," + str(y) + "], health = " + str(health) 
+
+def calculate_energy_required_to_maintain_brain():
+    minimum_loss = 1
+    energy_loss = (4*(brain_size / 100))
+    return minimum_loss+energy_loss
 
 
 def up():
