@@ -1,6 +1,12 @@
 from probability import with_probability
 import random
 
+def create_code_mutations(number_of_mutations):
+    code_mutations = []
+    for _ in range(number_of_mutations):
+        code_mutations.append(create_code());
+    return code_mutations
+
 def create_code():
     code = []
     available_commands = ["if on_food_square():", "if not on_food_square():", "up()", "down()", "left()", "right()", "stay()"]

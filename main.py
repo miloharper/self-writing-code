@@ -1,7 +1,7 @@
 import os
 import random 
-from food_map import create_random_food_map
-from code_generation import create_code
+from food_map import create_food_maps
+from code_generation import create_code_mutations
 from probability import with_probability
 x = None
 y = None
@@ -18,18 +18,10 @@ def main():
     global total_moves
     global food_map
     global brain_size
-    numTests = 50
-    #Create a thousand genetic code mutations and fifty food_maps
-    code_mutations = []
-    food_maps = []
-    for _ in range(100):
-        code_mutations.append(create_code());
-    for _ in range(50):
-        food_maps.append(create_random_food_map());
-
-
+    number_of_tests = 50
+    code_mutations = create_code_mutations(100)
+    food_maps = create_food_maps(50)
     results = [] # Contains tuples of each mutation along with how long mutation survived
-    #Run each mutation with ten random food maps and then take it's average survival time.
     for code_mutation in code_mutations:
         total_moves = 0
         if verbose:
@@ -38,7 +30,7 @@ def main():
         brain_size = len(code_mutation)
         if verbose:
             print "Testing code mutation against a new food map:"
-        for _ in range(numTests):
+        for _ in range(number_of_tests):
             x = 50
             y = 50
             health = 100
@@ -48,9 +40,9 @@ def main():
                 update_everything()
                 if verbose:
                     print "Health: " + str(health)
-        results.append((current_mutation, (total_moves / numTests),len(code_mutation)) ) # Take the average 
-    sorted(results, key=lambda result: result[1], reverse=True) #sort by length of health
-    print "The top mutation was as follows: \n" + results[0][0] + "\n\n Which on average survived for " + str(results[0][1]) + " units of time." + "which had a brain size (number of lines) of " + str(results[0][2])
+        results.append((current_mutation, (total_moves / number_of_tests),len(code_mutation)) ) # Takes the average survival time
+    sorted(results, key=lambda result: result[1], reverse=True) #Rank the best average survival times
+    print "The top mutation was as follows: \n" + results[0][0] + "\n\nWhich on average survived for " + str(results[0][1]) + " units of time and had a brain size of " + str(results[0][2]) + " lines of code."
 
 
 def convert_code_from_list_to_string(input_code):

@@ -1,6 +1,12 @@
 from probability import with_probability
 import random
 
+def create_food_maps(number_of_food_maps):
+	food_maps = []
+	for _ in range(number_of_food_maps):
+		food_maps.append(create_random_food_map());
+	return food_maps
+
 def create_random_food_map():
     food_map = [[0 for x in xrange(100)] for x in xrange(100)]
     for row_number, row in enumerate(food_map):
