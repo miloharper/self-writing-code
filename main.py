@@ -19,7 +19,7 @@ def main():
     #Create a thousand genetic code mutations and fifty food_maps
     code_mutations = []
     food_maps = []
-    for _ in range(50):
+    for _ in range(100):
         code_mutations.append(create_code());
     for _ in range(50):
         food_maps.append(create_random_food_map());
@@ -32,13 +32,16 @@ def main():
         total_moves = 0 
         if verbose:
             print "Testing code mutation against a new food map:"
-        for _ in range(10):
+        for _ in range(50):
             x = 50
             y = 50
             health = 100
             food_map = random.choice(food_maps)
             while health > 0:
                 exec current_mutation
+                update_everything()
+                if verbose:
+                    print "Health: " + str(health)
         results.append((current_mutation, (total_moves / 10)) ) # Take the average 
     sorted(results, key=lambda result: result[1], reverse=True) #sort by length of health
     print "The top mutation was as follows: \n" + results[0][0] + "\n\n Which on average survived for " + str(results[0][1]) + " units of time."
@@ -56,9 +59,6 @@ def update_everything():
     global health
     total_moves += 1
     health -= 1
-    print "Health:" + str(health)
-    print "food map square food:" + str(food_map[x][y])
-
     if food_map[x][y] > 0:
         eat = min(food_map[x][y], 10)
         health += eat
@@ -97,7 +97,6 @@ def left():
 
 def on_food_square():
     return food_map[x][y] > 0
-
 
 if __name__ == '__main__':
     main()
