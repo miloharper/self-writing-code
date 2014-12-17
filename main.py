@@ -8,7 +8,7 @@ y = None
 food_map = None
 health = None
 total_moves = None
-
+verbose = False
 
 def main():
     global x
@@ -26,11 +26,13 @@ def main():
     results = [] # Contains tuples of each mutation along with how long mutation survived
     #Run each mutation with ten random food maps and then take it's average survival time.
     for code_mutation in code_mutations:
-        print "Testing a new code mutation across 10 food maps:"
+        if verbose:
+            print "Testing a new code mutation across 10 food maps:"
         current_mutation = convert_code_from_list_to_string(code_mutation)
         total_moves = 0 
+        if verbose:
+            print "Testing code mutation against a new food map:"
         for _ in range(10):
-        print "Testing code mutation against a new food map:"
             x = 50
             y = 50
             health = 100
@@ -54,11 +56,15 @@ def update_everything():
     global health
     total_moves += 1
     health -= 1
+    print "Health:" + str(health)
+    print "food map square food:" + str(food_map[x][y])
+
     if food_map[x][y] > 0:
         eat = min(food_map[x][y], 10)
         health += eat
         food_map[x][y] -= eat
-    print "Position = [" + str(x) + "," + str(y) + "], health = " + str(health) 
+    if verbose:
+        print "Position = [" + str(x) + "," + str(y) + "], health = " + str(health) 
 
 
 def up():
