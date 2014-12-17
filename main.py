@@ -2,7 +2,6 @@ import os
 import random 
 from food_map import create_food_maps
 from code_generation import create_code_mutations
-from probability import with_probability
 x = None
 y = None
 food_map = None
@@ -19,7 +18,6 @@ def main():
     food_maps = create_food_maps(50)
     results = [] # Contains tuples of each mutation along with how long mutation survived
     for code_mutation in code_mutations:
-        total_moves = 0
         if verbose:
             print "Testing a new code mutation across 10 food maps:"
         current_mutation = convert_code_from_list_to_string(code_mutation)
@@ -37,11 +35,11 @@ def measure_average_survival_time(current_mutation, food_maps, number_of_tests):
     cumulative_survival_time = 0
     for _ in range(number_of_tests):
         food_map = random.choice(food_maps)
-        cumulative_survival_time += measure_survival_time_of_the_code_in_the_wild(current_mutation)
+        cumulative_survival_time += measure_survival_time(current_mutation)
     return (cumulative_survival_time / number_of_tests)
 
 
-def measure_survival_time_of_the_code_in_the_wild(current_mutation):
+def measure_survival_time(current_mutation):
     global x
     global y
     global health
@@ -56,6 +54,7 @@ def measure_survival_time_of_the_code_in_the_wild(current_mutation):
         if verbose:
             print "Health: " + str(health)
     return survival_time
+
 
 def convert_code_from_list_to_string(input_code):
     output_code = ""
@@ -75,6 +74,7 @@ def update_everything():
         food_map[x][y] -= eat
     if verbose:
         print "Position = [" + str(x) + "," + str(y) + "], health = " + str(health) 
+
 
 def calculate_energy_required_to_maintain_brain():
     minimum_loss = 1
