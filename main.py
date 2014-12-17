@@ -95,6 +95,9 @@ def left():
     update_everything()
 
 
+def stay():
+    update_everything()
+
 def on_food_square():
     return food_map[x][y] > 0
 
