@@ -40,23 +40,24 @@ class LifeForm:
         self.health -= self.metabolism
         if self.health < 0:
             raise Death
-        if self.food_map[self.x][self.y] > 0:
-            self.eat()
         if self.verbose:
             print "Position = [" + str(self.x) + "," + str(self.y) + "], health = " + str(self.health)
 
-
-    def eat(self):
-        eat = min(self.food_map[self.x][self.y], 10)
-        self.health += eat
-        self.food_map[self.x][self.y] -= eat
-        if self.verbose:
-            print "Eating"        
 
     def calculate_energy_required_to_maintain_brain(self):
         minimum_loss = 1
         energy_loss = self.brain_size / float(1000)
         return minimum_loss + energy_loss
+
+
+    def eat(self):
+        if self.food_map[self.x][self.y] > 0:
+            mouthful = min(self.food_map[self.x][self.y], 10)
+            self.health += mouthful
+            self.food_map[self.x][self.y] -= mouthful
+            if self.verbose:
+                print "Eating"
+        self.update_everything()        
 
 
     def up(self):
@@ -80,10 +81,6 @@ class LifeForm:
     def left(self):
         self.x -= 1
         self.x = max(self.x, 0)
-        self.update_everything()
-
-
-    def stay(self):
         self.update_everything()
 
 

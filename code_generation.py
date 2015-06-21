@@ -9,7 +9,7 @@ def create_code_mutations(number_of_mutations):
 
 def create_code():
     code = []
-    available_commands = ["if self.on_food_square():", "if not self.on_food_square():", "self.up()", "self.down()", "self.left()", "self.right()", "self.stay()"]
+    available_commands = ["if self.on_food_square():", "if not self.on_food_square():", "self.up()", "self.down()", "self.left()", "self.right()", "self.eat()"]
     for _ in range(random.randrange(0, 10)):
         command = random.choice(available_commands)
         indents = get_current_number_of_indents(code)
