@@ -14,6 +14,11 @@ class LifeForm:
         self.verbose = verbose
         # A mutation uses more energy per move if it has a large brain size (lines of code)
         self.brain_size = len(current_mutation)
+        self.metabolism = self.calculate_energy_required_to_maintain_brain()
+        if self.verbose:
+            print "New lifeform born"
+            print "Brain size: " + str(self.brain_size)
+            print "Metabolism: " + str(self.metabolism)
 
 
     def measure_survival_time(self):     
@@ -24,7 +29,6 @@ class LifeForm:
                     print "Executing genetic behaviour: "
                 exec self.current_mutation
                 self.update_everything()
-
         except Death:
             if self.verbose:
                 print "Lifeform died."
@@ -33,20 +37,25 @@ class LifeForm:
 
     def update_everything(self):
         self.survival_time += 1
-        self.health -= self.calculate_energy_required_to_maintain_brain()
+        self.health -= self.metabolism
         if self.health < 0:
             raise Death
         if self.food_map[self.x][self.y] > 0:
-            eat = min(self.food_map[self.x][self.y], 10)
-            self.health += eat
-            self.food_map[self.x][self.y] -= eat
+            self.eat()
         if self.verbose:
             print "Position = [" + str(self.x) + "," + str(self.y) + "], health = " + str(self.health)
 
 
+    def eat(self):
+        eat = min(self.food_map[self.x][self.y], 10)
+        self.health += eat
+        self.food_map[self.x][self.y] -= eat
+        if self.verbose:
+            print "Eating"        
+
     def calculate_energy_required_to_maintain_brain(self):
         minimum_loss = 1
-        energy_loss = (4 * (self.brain_size / 100))
+        energy_loss = self.brain_size / float(1000)
         return minimum_loss + energy_loss
 
 
