@@ -84,5 +84,5 @@ class LifeForm:
         self.update_everything()
 
 
-    def on_food_square(self):
+    def smells_food(self):
         return self.food_map[self.x][self.y] > 0
