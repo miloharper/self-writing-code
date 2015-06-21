@@ -5,9 +5,9 @@ from food_map import create_food_maps
 from code_generation import create_code_mutations
 
 def main():
-    number_of_tests = 1
-    code_mutations = create_code_mutations(1)
-    food_maps = create_food_maps(1)
+    number_of_tests = 10
+    code_mutations = create_code_mutations(10000)
+    food_maps = create_food_maps(100)
     results = []  # Contains tuples of each mutation along with how long mutation survived
     for code_mutation in code_mutations:
         current_mutation = convert_code_from_list_to_string(code_mutation)
@@ -23,7 +23,7 @@ def measure_average_survival_time(current_mutation, food_maps, number_of_tests):
     cumulative_survival_time = 0
     for _ in range(number_of_tests):
         food_map = random.choice(food_maps)
-        life_form = LifeForm(current_mutation, food_map, True)
+        life_form = LifeForm(current_mutation, food_map, False)
         cumulative_survival_time += life_form.measure_survival_time()
     return (cumulative_survival_time / number_of_tests)
 

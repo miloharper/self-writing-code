@@ -5,8 +5,8 @@ class LifeForm:
 
 
     def __init__(self, current_mutation, food_map, verbose):
-        self.x = 50
-        self.y = 50
+        self.x = 5
+        self.y = 5
         self.health = 100
         self.survival_time = 0
         self.current_mutation = current_mutation
@@ -67,13 +67,13 @@ class LifeForm:
 
     def right(self):
         self.x += 1
-        self.x = min(self.x, 99)
+        self.x = min(self.x, 9)
         self.update_everything()
 
 
     def down(self):
         self.y += 1
-        self.y = min(self.y, 99)
+        self.y = min(self.y, 9)
         self.update_everything()
 
 
