@@ -22,6 +22,7 @@ def main():
 def measure_average_survival_time(current_mutation, food_maps, number_of_tests):
     cumulative_survival_time = 0
     for _ in range(number_of_tests):
+        print "New lifeform"
         food_map = random.choice(food_maps)
         life_form = LifeForm(current_mutation, food_map, True)
         cumulative_survival_time += life_form.measure_survival_time()

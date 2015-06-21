@@ -1,3 +1,6 @@
+class Death(Exception):
+    pass
+
 class LifeForm:
 
 
@@ -13,18 +16,26 @@ class LifeForm:
         self.brain_size = len(current_mutation)
 
 
-    def measure_survival_time(self):
-        while self.health > 0:
-            exec self.current_mutation
-            self.update_everything()
+    def measure_survival_time(self):     
+        try:
+            forever = True
+            while forever is True:
+                if self.verbose:
+                    print "Executing genetic behaviour: "
+                exec self.current_mutation
+                self.update_everything()
+
+        except Death:
             if self.verbose:
-                print "Health: " + str(self.health)
-        return self.survival_time
+                print "Lifeform died."
+            return self.survival_time
 
 
     def update_everything(self):
         self.survival_time += 1
         self.health -= self.calculate_energy_required_to_maintain_brain()
+        if self.health < 0:
+            raise Death
         if self.food_map[self.x][self.y] > 0:
             eat = min(self.food_map[self.x][self.y], 10)
             self.health += eat
